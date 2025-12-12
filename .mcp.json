@@ -3,6 +3,10 @@
     "agentvibes": {
       "command": "npx",
       "args": ["-y", "--package=agentvibes", "agentvibes-mcp-server"]
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"]
     }
   }
 }
