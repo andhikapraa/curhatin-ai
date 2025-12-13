@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import Image from "next/image";
 
 import { WishlistModal } from "@/components/landing/wishlist-modal";
@@ -55,7 +55,7 @@ const bubbles = [
   { size: 45, delay: 2.5, duration: 13, left: "90%", opacity: 0.2 },
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -66,7 +66,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,

@@ -1,7 +1,7 @@
 "use client";
 
 import { BookOpen, Heart, Home, Users } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import Image from "next/image";
 
 const benefits = [
@@ -71,7 +71,7 @@ export function WaveDividerBottom() {
   );
 }
 
-const titleVariants = {
+const titleVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -83,7 +83,7 @@ const titleVariants = {
   },
 };
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -94,7 +94,7 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 40, scale: 0.95 },
   visible: {
     opacity: 1,

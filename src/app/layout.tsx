@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Nunito, Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -16,9 +16,12 @@ const nunito = Nunito({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#5DC998",
+};
+
 export const metadata: Metadata = {
   title: "Curhatin AI - Teman Curhat AI yang Memahami Perasaanmu",
-  themeColor: "#5DC998",
   description:
     "Curhatin AI adalah teman AI yang selalu siap mendengarkan curhatanmu kapan saja. Ruang aman untuk berbagi perasaan tanpa judgement, dengan respons penuh empati.",
   keywords: [

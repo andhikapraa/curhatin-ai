@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import Image from "next/image";
 
 export function HowItWorksWaveTop() {
@@ -70,7 +70,7 @@ const steps = [
   },
 ];
 
-const headerVariants = {
+const headerVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -82,7 +82,7 @@ const headerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hiddenLeft: { opacity: 0, x: -80 },
   hiddenRight: { opacity: 0, x: 80 },
   visible: {
