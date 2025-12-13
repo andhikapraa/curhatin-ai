@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "motion/react";
 import Image from "next/image";
 
 export function HowItWorksWaveTop() {
@@ -47,6 +50,7 @@ const steps = [
       "Ceritakan apa pun yang kamu rasakan, dengan ruang yang aman untuk menjadi diri sendiri.",
     image: "/how/book.png",
     imagePosition: "right" as const,
+    step: 1,
   },
   {
     title: "Dapatkan Dukungan yang Menenangkan",
@@ -54,6 +58,7 @@ const steps = [
       "AI akan merespons dengan empati, teknik menenangkan, dan pandangan jujur yang membantu.",
     image: "/how/robot.png",
     imagePosition: "left" as const,
+    step: 2,
   },
   {
     title: "Temukan Ruang Aman untuk Bernafas",
@@ -61,8 +66,34 @@ const steps = [
       "Lanjutkan ke latihan mindful atau emotional reflection ketika kamu siap.",
     image: "/how/mirror.png",
     imagePosition: "right" as const,
+    step: 3,
   },
 ];
+
+const headerVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
+const cardVariants = {
+  hiddenLeft: { opacity: 0, x: -80 },
+  hiddenRight: { opacity: 0, x: 80 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    },
+  },
+};
 
 export function HowItWorks() {
   return (
@@ -71,7 +102,7 @@ export function HowItWorks() {
       <div className="absolute inset-0">
         <Image
           alt=""
-          className="h-full w-full object-cover opacity-50"
+          className="h-full w-full object-cover"
           fill
           sizes="100vw"
           src="/bg-overlay.png"
@@ -81,22 +112,65 @@ export function HowItWorks() {
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-[1216px] px-6 lg:px-12">
         {/* Header */}
-        <div className="mb-12 flex flex-col items-center gap-3 lg:mb-16">
+        <motion.div
+          className="mb-12 flex flex-col items-center gap-3 lg:mb-16"
+          initial="hidden"
+          variants={headerVariants}
+          viewport={{ once: true, margin: "-100px" }}
+          whileInView="visible"
+        >
           <h2 className="text-center font-bold font-heading text-3xl text-white lg:text-5xl">
             How It Works
           </h2>
           <p className="text-center font-body font-extrabold text-lg text-white lg:text-2xl">
             Tiga langkah sederhana untuk mendapatkan dukungan yang menenangkan.
           </p>
-        </div>
+        </motion.div>
 
         {/* Steps */}
-        <div className="flex flex-col gap-6 lg:gap-4">
-          {steps.map((step) => (
-            <div
-              className="relative overflow-hidden rounded-3xl bg-[#D9F1F3]"
+        <div className="relative flex flex-col gap-6 lg:gap-4">
+          {/* Connecting line (desktop only) */}
+          <div className="-translate-x-1/2 pointer-events-none absolute top-0 bottom-0 left-1/2 hidden w-[2px] lg:block">
+            <motion.div
+              className="h-full w-full bg-gradient-to-b from-[#25A692]/30 via-[#25A692]/50 to-[#25A692]/30"
+              initial={{ scaleY: 0, originY: 0 }}
+              transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+              viewport={{ once: true }}
+              whileInView={{ scaleY: 1 }}
+            />
+          </div>
+
+          {steps.map((step, index) => (
+            <motion.div
+              className="group relative overflow-hidden rounded-3xl bg-[#D9F1F3]"
+              initial={
+                step.imagePosition === "left" ? "hiddenRight" : "hiddenLeft"
+              }
               key={step.title}
+              variants={cardVariants}
+              viewport={{ once: true, margin: "-50px" }}
+              whileInView="visible"
             >
+              {/* Step number badge - positioned based on layout */}
+              <motion.div
+                className={`absolute top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#25A692] font-bold font-heading text-lg text-white shadow-lg lg:top-6 lg:h-12 lg:w-12 lg:text-xl ${
+                  step.imagePosition === "right"
+                    ? "right-4 lg:right-6"
+                    : "left-4 lg:left-6"
+                }`}
+                initial={{ scale: 0, rotate: -180 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15,
+                  delay: 0.3 + index * 0.1,
+                }}
+                viewport={{ once: true }}
+                whileInView={{ scale: 1, rotate: 0 }}
+              >
+                {step.step}
+              </motion.div>
+
               {/* Blurred Ellipse Decorations */}
               <div
                 className={`pointer-events-none absolute top-[-104px] h-[358px] w-[358px] rounded-full bg-white opacity-[0.88] blur-[300px] ${
@@ -115,7 +189,7 @@ export function HowItWorks() {
 
               {/* Card Content */}
               <div
-                className={`relative z-10 flex flex-col items-center gap-6 p-8 lg:h-[284px] lg:flex-row lg:items-center lg:gap-[28px] lg:px-14 lg:py-4 ${
+                className={`relative z-10 flex flex-col items-center gap-6 p-8 pt-16 lg:h-[284px] lg:flex-row lg:items-center lg:gap-[28px] lg:px-14 lg:py-4 lg:pt-4 ${
                   step.imagePosition === "left"
                     ? "lg:flex-row-reverse"
                     : "lg:flex-row"
@@ -145,26 +219,39 @@ export function HowItWorks() {
                   </div>
 
                   {/* Button */}
-                  <button
-                    className="flex h-[50px] w-full max-w-[266px] items-center justify-center rounded-3xl bg-[rgba(25,111,98,0.3)] px-[10px] font-body font-semibold text-white text-xl shadow-[inset_0px_-2px_4px_rgba(0,0,0,0.2),inset_0px_2px_4px_rgba(255,255,255,0.4)] backdrop-blur-[5px] transition-all hover:scale-[1.02] hover:bg-[rgba(25,111,98,0.4)] active:scale-[0.98]"
+                  <motion.button
+                    className="relative flex h-[50px] w-full max-w-[266px] items-center justify-center overflow-hidden rounded-3xl bg-[rgba(25,111,98,0.3)] px-[10px] font-body font-semibold text-white text-xl shadow-[inset_0px_-2px_4px_rgba(0,0,0,0.2),inset_0px_2px_4px_rgba(255,255,255,0.4)] backdrop-blur-[5px] transition-colors hover:bg-[rgba(25,111,98,0.4)]"
                     type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
                     Deskripsi Lengkap
-                  </button>
+                  </motion.button>
                 </div>
 
-                {/* Image */}
-                <div className="relative h-[200px] w-[200px] flex-shrink-0 lg:h-[251px] lg:w-[300px]">
+                {/* Image with float animation */}
+                <motion.div
+                  animate={{
+                    y: [0, -10, 0],
+                  }}
+                  className="relative h-[200px] w-[200px] flex-shrink-0 lg:h-[251px] lg:w-[300px]"
+                  transition={{
+                    duration: 3 + index * 0.3,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                    delay: index * 0.2,
+                  }}
+                >
                   <Image
                     alt={step.title}
-                    className="object-contain"
+                    className="object-contain drop-shadow-lg transition-transform duration-300 group-hover:scale-105"
                     fill
                     sizes="(max-width: 1024px) 200px, 300px"
                     src={step.image}
                   />
-                </div>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
