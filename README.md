@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Curhatin AI
+
+> Indonesian AI-powered emotional support platform - Landing Page
+
+**Course Project** for PPD (Pengelolaan Produk Digital) at Fasilkom UI
+
+## About
+
+Curhatin AI is a concept for an Indonesian emotional support platform where users can safely express their feelings and receive empathetic AI-powered responses. "Curhat" in Indonesian means to vent or pour out one's feelings.
+
+**Note:** This repository contains only the **marketing landing page** for the product concept. The actual AI chat functionality is not implemented.
+
+### Features Showcased
+
+- Hero section with value proposition
+- Feature highlights (Journaling, Mood Tracker, Mindful Moment)
+- "Why Us" benefits section
+- How It Works guide
+- FAQ accordion
+- Wishlist signup modal (UI only)
+
+## Tech Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Next.js | 16 | React framework with App Router |
+| React | 19 | UI library with new compiler |
+| Tailwind CSS | 4 | Utility-first styling with `@theme` |
+| Motion | 12 | Animation library |
+| Radix UI | - | Accessible primitives |
+| animate-ui | - | Pre-built animated components |
+| Ultracite | 6 | Biome-based linting & formatting |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- [Bun](https://bun.sh/) (recommended) or npm/yarn/pnpm
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+# Clone the repository
+git clone https://github.com/your-username/curhatin-ai.git
+cd curhatin-ai
+
+# Install dependencies
+bun install
+
+# Start development server
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the landing page.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── layout.tsx          # Root layout with fonts
+│   ├── page.tsx            # Landing page
+│   └── globals.css         # Tailwind + CSS variables
+├── components/
+│   ├── landing/            # Landing page sections
+│   │   ├── header.tsx
+│   │   ├── hero.tsx
+│   │   ├── why-us.tsx
+│   │   ├── features.tsx
+│   │   ├── how-it-works.tsx
+│   │   ├── faq.tsx
+│   │   ├── footer.tsx
+│   │   └── wishlist-modal.tsx
+│   └── animate-ui/         # Animated UI components
+├── hooks/                  # Custom React hooks
+└── lib/                    # Utilities
+```
 
-## Learn More
+## Development
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Run development server
+bun dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Lint and format code
+bun check
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Build for production
+bun run build
 
-## Deploy on Vercel
+# Start production server
+bun start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Design System
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Color Palette
+
+The design uses a calming teal color scheme to evoke feelings of safety and tranquility:
+
+- **Primary:** `#5DC998` (Teal) - Main brand color
+- **Secondary:** `#F6FCFC` - Light backgrounds
+- **Accent:** `#FFB6C1` (Pink) - Hearts and love elements
+
+### Typography
+
+- **Headings:** Poppins (Bold)
+- **Body:** Nunito (SemiBold/Medium)
+
+### Language
+
+All user-facing content is in **Indonesian (Bahasa Indonesia)**.
+
+## Course Information
+
+**Course:** PPD (Pengelolaan Produk Digital)
+**Institution:** Fasilkom UI (Fakultas Ilmu Komputer, Universitas Indonesia)
+
+## License
+
+This project is for educational purposes.
