@@ -228,21 +228,18 @@ export function WishlistModal({ children }: WishlistModalProps) {
                     />
                   </div>
 
-                  {/* Turnstile Widget */}
+                  {/* Turnstile Widget (Invisible) */}
                   {siteKey ? (
-                    <div className="flex justify-center">
-                      <Turnstile
-                        onError={() => setTurnstileToken(null)}
-                        onExpire={() => setTurnstileToken(null)}
-                        onSuccess={setTurnstileToken}
-                        options={{
-                          theme: "light",
-                          size: "compact",
-                        }}
-                        ref={turnstileRef}
-                        siteKey={siteKey}
-                      />
-                    </div>
+                    <Turnstile
+                      onError={() => setTurnstileToken(null)}
+                      onExpire={() => setTurnstileToken(null)}
+                      onSuccess={setTurnstileToken}
+                      options={{
+                        size: "invisible",
+                      }}
+                      ref={turnstileRef}
+                      siteKey={siteKey}
+                    />
                   ) : null}
 
                   {/* Error Message */}
