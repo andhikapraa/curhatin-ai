@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito, Poppins } from "next/font/google";
+import Script from "next/script";
+
 import "./globals.css";
 
 const poppins = Poppins({
@@ -21,7 +23,14 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Curhatin AI - Teman Curhat AI yang Memahami Perasaanmu",
+  metadataBase: new URL("https://curhatin-ai.prasetya.dev"),
+  title: {
+    default: "Curhatin AI - Teman Curhat AI yang Memahami Perasaanmu",
+    template: "%s | Curhatin AI",
+  },
+  alternates: {
+    canonical: "/",
+  },
   description:
     "Curhatin AI adalah teman AI yang selalu siap mendengarkan curhatanmu kapan saja. Ruang aman untuk berbagi perasaan tanpa judgement, dengan respons penuh empati.",
   keywords: [
@@ -47,13 +56,65 @@ export const metadata: Metadata = {
       "Ruang aman untuk berbagi perasaan tanpa judgement, dengan respons penuh empati.",
     locale: "id_ID",
     type: "website",
+    images: [
+      {
+        url: "/og/home.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Curhatin AI - Tempat Aman untuk Menenangkan Pikiranmu",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Curhatin AI - Teman Curhat AI yang Memahami Perasaanmu",
     description:
       "Ruang aman untuk berbagi perasaan tanpa judgement, dengan respons penuh empati.",
+    images: ["/og/home.jpg"],
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://curhatin-ai.prasetya.dev/#organization",
+      name: "Curhatin AI",
+      url: "https://curhatin-ai.prasetya.dev",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://curhatin-ai.prasetya.dev/apple-touch-icon.png",
+      },
+      description:
+        "Teman AI yang selalu siap mendengarkan curhatanmu kapan saja dengan empati tulus.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://curhatin-ai.prasetya.dev/#website",
+      url: "https://curhatin-ai.prasetya.dev",
+      name: "Curhatin AI",
+      publisher: {
+        "@id": "https://curhatin-ai.prasetya.dev/#organization",
+      },
+      inLanguage: "id-ID",
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://curhatin-ai.prasetya.dev/#webpage",
+      url: "https://curhatin-ai.prasetya.dev",
+      name: "Curhatin AI - Teman Curhat AI yang Memahami Perasaanmu",
+      description:
+        "Ruang aman untuk berbagi perasaan tanpa judgement, dengan respons penuh empati.",
+      isPartOf: {
+        "@id": "https://curhatin-ai.prasetya.dev/#website",
+      },
+      about: {
+        "@id": "https://curhatin-ai.prasetya.dev/#organization",
+      },
+      inLanguage: "id-ID",
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -63,6 +124,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
+      <head>
+        <Script
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          id="json-ld"
+          type="application/ld+json"
+        />
+      </head>
       <body
         className={`${poppins.variable} ${nunito.variable} font-body antialiased`}
       >

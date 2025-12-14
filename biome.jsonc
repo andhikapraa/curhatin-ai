@@ -10,5 +10,18 @@
       "!src/lib/get-strict-context.tsx",
       "!.claude/**/*"
     ]
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["src/app/layout.tsx"],
+      "linter": {
+        "rules": {
+          "security": {
+            // JSON-LD structured data requires dangerouslySetInnerHTML
+            "noDangerouslySetInnerHtml": "off"
+          }
+        }
+      }
+    }
+  ]
 }
