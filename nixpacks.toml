@@ -1,4 +1,6 @@
 [phases.setup]
+# Bun 1.3.3 - commit from nixhub.io
+nixpkgsArchive = "8c29968b3a942f2903f90797f9623737c215737c"
 nixPkgs = ["nodejs_22", "bun"]
 
 [phases.install]
