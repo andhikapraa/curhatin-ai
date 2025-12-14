@@ -20,19 +20,12 @@ type FormStatus = "idle" | "loading" | "success" | "error";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function validateForm(
-  name: string,
-  email: string,
-  turnstileToken: string | null
-): string | null {
+function validateForm(name: string, email: string): string | null {
   if (!(name.trim() && email.trim())) {
     return "Mohon isi semua field";
   }
   if (!EMAIL_REGEX.test(email)) {
     return "Format email tidak valid";
-  }
-  if (!turnstileToken) {
-    return "Mohon selesaikan verifikasi keamanan";
   }
   return null;
 }
@@ -50,13 +43,12 @@ export function WishlistModal({ children }: WishlistModalProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRef = useRef<TurnstileInstance>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const validationError = validateForm(name, email, turnstileToken);
+    const validationError = validateForm(name, email);
     if (validationError) {
       setStatus("error");
       setErrorMessage(validationError);
@@ -67,13 +59,21 @@ export function WishlistModal({ children }: WishlistModalProps) {
     setErrorMessage("");
 
     try {
+      // Execute invisible turnstile and wait for token
+      turnstileRef.current?.execute();
+      const token = await turnstileRef.current?.getResponsePromise();
+
+      if (!token) {
+        throw new Error("Security verification failed");
+      }
+
       const response = await fetch("/api/wishlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim(),
-          turnstileToken,
+          turnstileToken: token,
         }),
       });
 
@@ -91,7 +91,6 @@ export function WishlistModal({ children }: WishlistModalProps) {
       setStatus("error");
       setErrorMessage(getErrorMessage(error));
       turnstileRef.current?.reset();
-      setTurnstileToken(null);
     }
   };
 
@@ -100,7 +99,6 @@ export function WishlistModal({ children }: WishlistModalProps) {
     setEmail("");
     setStatus("idle");
     setErrorMessage("");
-    setTurnstileToken(null);
     turnstileRef.current?.reset();
   };
 
@@ -228,14 +226,12 @@ export function WishlistModal({ children }: WishlistModalProps) {
                     />
                   </div>
 
-                  {/* Turnstile Widget (Invisible) */}
+                  {/* Turnstile Widget (Invisible - executes on form submit) */}
                   {siteKey ? (
                     <Turnstile
-                      onError={() => setTurnstileToken(null)}
-                      onExpire={() => setTurnstileToken(null)}
-                      onSuccess={setTurnstileToken}
                       options={{
                         size: "invisible",
+                        execution: "execute",
                       }}
                       ref={turnstileRef}
                       siteKey={siteKey}
