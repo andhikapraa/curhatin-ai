@@ -4,6 +4,7 @@ import { Menu } from "lucide-react";
 import Image from "next/image";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -67,13 +68,14 @@ export function Header() {
               </SheetHeader>
               <nav className="mt-10 flex flex-col gap-8">
                 {navLinks.map((link) => (
-                  <a
-                    className="font-heading font-normal text-white text-xl transition-opacity hover:opacity-80"
-                    href={link.href}
-                    key={link.href}
-                  >
-                    {link.label}
-                  </a>
+                  <SheetClose asChild key={link.href}>
+                    <a
+                      className="font-heading font-normal text-white text-xl transition-opacity hover:opacity-80"
+                      href={link.href}
+                    >
+                      {link.label}
+                    </a>
+                  </SheetClose>
                 ))}
               </nav>
             </SheetContent>

@@ -28,6 +28,7 @@ function Sheet(props: SheetProps) {
       <SheetPrimitive.Root
         data-slot="sheet"
         {...props}
+        open={isOpen}
         onOpenChange={setIsOpen}
       />
     </SheetProvider>
@@ -96,6 +97,7 @@ function SheetContent({
   side = "right",
   transition = { type: "spring", stiffness: 150, damping: 22 },
   style,
+  className,
   children,
   ...props
 }: SheetContentProps) {
@@ -119,6 +121,7 @@ function SheetContent({
     <SheetPrimitive.Content asChild forceMount {...props}>
       <motion.div
         animate={{ [axis]: 0, opacity: 1 }}
+        className={className}
         data-side={side}
         data-slot="sheet-content"
         exit={offscreen[side]}
