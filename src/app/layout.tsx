@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Nunito, Poppins } from "next/font/google";
 import Script from "next/script";
 
+import CurhatinChatBot from "@/components/chatbot/curhatin-chat-bot";
+
 import "./globals.css";
 
 const poppins = Poppins({
@@ -135,6 +137,7 @@ export default function RootLayout({
         className={`${poppins.variable} ${nunito.variable} font-body antialiased`}
       >
         {children}
+        <CurhatinChatBot />
       </body>
     </html>
   );

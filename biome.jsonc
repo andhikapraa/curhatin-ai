@@ -11,6 +11,14 @@
       "!.claude/**/*"
     ]
   },
+  "linter": {
+    "rules": {
+      "complexity": {
+        // Chatbot and API routes have inherently complex logic
+        "noExcessiveCognitiveComplexity": "off"
+      }
+    }
+  },
   "overrides": [
     {
       "includes": ["src/app/layout.tsx"],

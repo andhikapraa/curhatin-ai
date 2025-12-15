@@ -151,12 +151,12 @@ export function HowItWorks() {
               viewport={{ once: true, margin: "-50px" }}
               whileInView="visible"
             >
-              {/* Step number badge - positioned based on layout */}
+              {/* Step number badge - always left on mobile, varies on desktop */}
               <motion.div
-                className={`absolute top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#25A692] font-bold font-heading text-lg text-white shadow-lg lg:top-6 lg:h-12 lg:w-12 lg:text-xl ${
+                className={`absolute top-4 left-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-[#25A692] font-bold font-heading text-lg text-white shadow-lg lg:top-6 lg:h-12 lg:w-12 lg:text-xl ${
                   step.imagePosition === "right"
-                    ? "right-4 lg:right-6"
-                    : "left-4 lg:left-6"
+                    ? "lg:right-6 lg:left-auto"
+                    : "lg:left-6"
                 }`}
                 initial={{ scale: 0, rotate: -180 }}
                 transition={{
@@ -197,36 +197,18 @@ export function HowItWorks() {
               >
                 {/* Text Content */}
                 <div
-                  className={`flex flex-1 flex-col gap-6 ${
+                  className={`flex flex-1 flex-col gap-4 ${
                     step.imagePosition === "left"
                       ? "lg:items-end lg:text-right"
                       : "lg:items-start lg:text-left"
                   }`}
                 >
-                  <div
-                    className={`flex flex-col gap-4 ${
-                      step.imagePosition === "left"
-                        ? "lg:items-end"
-                        : "lg:items-start"
-                    }`}
-                  >
-                    <h3 className="font-heading font-semibold text-2xl text-[#3E4A4F] lg:text-4xl lg:leading-[40px]">
-                      {step.title}
-                    </h3>
-                    <p className="font-heading font-medium text-[#1A2223]/60 text-base lg:text-2xl lg:leading-8">
-                      {step.description}
-                    </p>
-                  </div>
-
-                  {/* Button */}
-                  <motion.button
-                    className="relative flex h-[50px] w-full max-w-[266px] items-center justify-center overflow-hidden rounded-3xl bg-[rgba(25,111,98,0.3)] px-[10px] font-body font-semibold text-white text-xl shadow-[inset_0px_-2px_4px_rgba(0,0,0,0.2),inset_0px_2px_4px_rgba(255,255,255,0.4)] backdrop-blur-[5px] transition-colors hover:bg-[rgba(25,111,98,0.4)]"
-                    type="button"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    Deskripsi Lengkap
-                  </motion.button>
+                  <h3 className="font-heading font-semibold text-2xl text-[#3E4A4F] lg:text-4xl lg:leading-[40px]">
+                    {step.title}
+                  </h3>
+                  <p className="font-heading font-medium text-[#1A2223]/60 text-base lg:text-2xl lg:leading-8">
+                    {step.description}
+                  </p>
                 </div>
 
                 {/* Image with float animation */}

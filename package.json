@@ -18,8 +18,10 @@
     "motion": "^12.23.26",
     "next": "16.0.10",
     "next-themes": "^0.4.6",
+    "parlant-client": "^3.0.1",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
+    "react-chatbotify": "^2.3.0",
     "react-dom": "19.2.3",
     "tailwind-merge": "^3.4.0"
   },

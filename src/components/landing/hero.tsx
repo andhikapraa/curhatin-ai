@@ -3,6 +3,15 @@
 import { motion, type Variants } from "motion/react";
 import Image from "next/image";
 
+import { LiquidButton } from "@/components/animate-ui/primitives/buttons/liquid";
+import {
+  Particles,
+  ParticlesEffect,
+} from "@/components/animate-ui/primitives/effects/particles";
+import {
+  TypingText,
+  TypingTextCursor,
+} from "@/components/animate-ui/primitives/texts/typing";
 import { WishlistModal } from "@/components/landing/wishlist-modal";
 
 function FloatingBubble({
@@ -21,38 +30,56 @@ function FloatingBubble({
   return (
     <motion.div
       animate={{
+        opacity: 1,
+        scale: [1, 1.1, 1],
         y: [0, -100, 0],
         x: [0, 20, -20, 0],
-        scale: [1, 1.1, 1],
       }}
       className="absolute rounded-full"
-      initial={{ y: 0 }}
+      initial={{ opacity: 0, scale: 0.5, y: 0 }}
       style={{
         width: size,
         height: size,
         left,
         bottom: "10%",
-        background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(167,222,227,${opacity}))`,
-        boxShadow: "inset 0 0 20px rgba(255,255,255,0.5)",
+        background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(77,208,201,${opacity}))`,
+        boxShadow:
+          "inset 0 0 20px rgba(255,255,255,0.6), 0 4px 15px rgba(77,208,201,0.3)",
+        border: "1px solid rgba(255,255,255,0.5)",
       }}
       transition={{
-        duration,
-        delay,
-        repeat: Number.POSITIVE_INFINITY,
-        ease: "easeInOut",
+        opacity: { duration: 0.8, delay: delay * 0.3 },
+        scale: {
+          duration,
+          delay: delay * 0.3 + 0.8,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        },
+        y: {
+          duration,
+          delay: delay * 0.3 + 0.8,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        },
+        x: {
+          duration,
+          delay: delay * 0.3 + 0.8,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        },
       }}
     />
   );
 }
 
 const bubbles = [
-  { size: 60, delay: 0, duration: 8, left: "10%", opacity: 0.4 },
-  { size: 40, delay: 1.5, duration: 10, left: "25%", opacity: 0.3 },
-  { size: 80, delay: 0.5, duration: 12, left: "70%", opacity: 0.35 },
-  { size: 35, delay: 2, duration: 9, left: "85%", opacity: 0.25 },
-  { size: 50, delay: 3, duration: 11, left: "50%", opacity: 0.3 },
-  { size: 25, delay: 1, duration: 7, left: "15%", opacity: 0.4 },
-  { size: 45, delay: 2.5, duration: 13, left: "90%", opacity: 0.2 },
+  { size: 75, delay: 0, duration: 8, left: "10%", opacity: 0.65 },
+  { size: 55, delay: 1.5, duration: 10, left: "25%", opacity: 0.55 },
+  { size: 95, delay: 0.5, duration: 12, left: "70%", opacity: 0.6 },
+  { size: 50, delay: 2, duration: 9, left: "85%", opacity: 0.5 },
+  { size: 65, delay: 3, duration: 11, left: "50%", opacity: 0.55 },
+  { size: 40, delay: 1, duration: 7, left: "15%", opacity: 0.65 },
+  { size: 60, delay: 2.5, duration: 13, left: "90%", opacity: 0.45 },
 ];
 
 const containerVariants: Variants = {
@@ -62,18 +89,6 @@ const containerVariants: Variants = {
     transition: {
       staggerChildren: 0.15,
       delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
 };
@@ -137,45 +152,80 @@ export function Hero() {
           variants={containerVariants}
         >
           <div className="flex flex-col items-center gap-4 lg:gap-7">
-            <motion.h1
-              className="text-center font-bold font-heading text-2xl text-[#3E4A4F] leading-[120%] lg:text-[32px]"
-              variants={itemVariants}
-            >
-              Tempat Aman untuk Menenangkan Pikiranmu, Kapan Pun Kamu Butuh
-            </motion.h1>
+            <h1 className="text-center font-bold font-heading text-[#3E4A4F] text-[26px] leading-[120%] lg:text-[38px]">
+              <TypingText
+                duration={50}
+                text="Tempat aman untuk curhat dan menenangkan pikiran, kapanpun kamu butuh"
+              >
+                <TypingTextCursor className="ml-1 h-[26px] w-[3px] lg:h-[38px] lg:w-1" />
+              </TypingText>
+            </h1>
             <motion.p
+              animate={{ opacity: 1, y: 0 }}
               className="text-center font-heading font-medium text-[#3E4A4F] text-base leading-6 lg:text-2xl lg:leading-8"
-              variants={itemVariants}
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 3.5 }}
             >
               Curhatin AI membantu kamu melewati momen berat dengan respons
               cepat, empati yang tulus, dan perspektif lembut tanpa menghakimi.
             </motion.p>
           </div>
 
-          {/* CTA Button with breathing animation */}
-          <motion.div className="w-full" variants={itemVariants}>
-            <WishlistModal>
-              <motion.button
-                className="relative flex h-12 w-full cursor-pointer items-center justify-center overflow-hidden rounded-3xl bg-[rgba(25,111,98,0.3)] px-[10px] font-body font-semibold text-base text-white shadow-[inset_0px_-2px_4px_rgba(0,0,0,0.2),inset_0px_2px_4px_rgba(255,255,255,0.4)] backdrop-blur-[5px] transition-colors hover:bg-[rgba(25,111,98,0.4)] lg:h-[50px] lg:text-xl"
+          {/* CTA Buttons */}
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            className="flex w-full flex-col gap-3 sm:flex-row sm:gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 4 }}
+          >
+            {/* Primary: Open Chatbot */}
+            <Particles className="flex-1">
+              <LiquidButton
+                className="relative flex h-12 w-full cursor-pointer items-center justify-center overflow-hidden rounded-3xl bg-[rgba(25,111,98,0.5)] px-[10px] font-body font-semibold text-base text-white shadow-[inset_0px_-2px_4px_rgba(0,0,0,0.2),inset_0px_2px_4px_rgba(255,255,255,0.4)] backdrop-blur-[5px] lg:h-[50px] lg:text-xl"
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent("openCurhatinChatbot"));
+                }}
+                style={
+                  {
+                    "--liquid-button-color": "rgba(25,111,98,0.7)",
+                    "--liquid-button-background-color": "rgba(25,111,98,0.5)",
+                  } as React.CSSProperties
+                }
                 type="button"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
               >
-                {/* Shimmer effect */}
-                <motion.div
-                  animate={{
-                    x: ["-100%", "200%"],
-                  }}
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  transition={{
-                    duration: 2,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatDelay: 3,
-                    ease: "easeInOut",
-                  }}
-                />
                 Mulai Curhat Sekarang
-              </motion.button>
+              </LiquidButton>
+              <ParticlesEffect
+                className="h-2 w-2 rounded-full bg-[#4dd0c9]"
+                count={8}
+                radius={40}
+                spread={360}
+              />
+            </Particles>
+
+            {/* Secondary: Join Waitlist */}
+            <WishlistModal>
+              <Particles className="flex-1">
+                <LiquidButton
+                  className="relative flex h-12 w-full cursor-pointer items-center justify-center overflow-hidden rounded-3xl border-2 border-[rgba(25,111,98,0.4)] bg-white/30 px-[10px] font-body font-semibold text-[#196F62] text-base shadow-[inset_0px_-2px_4px_rgba(0,0,0,0.1),inset_0px_2px_4px_rgba(255,255,255,0.6)] backdrop-blur-[5px] lg:h-[50px] lg:text-xl"
+                  style={
+                    {
+                      "--liquid-button-color": "rgba(25,111,98,0.2)",
+                      "--liquid-button-background-color":
+                        "rgba(255,255,255,0.3)",
+                    } as React.CSSProperties
+                  }
+                  type="button"
+                >
+                  Gabung Waitlist
+                </LiquidButton>
+                <ParticlesEffect
+                  className="h-2 w-2 rounded-full bg-[#196F62]"
+                  count={6}
+                  radius={35}
+                  spread={360}
+                />
+              </Particles>
             </WishlistModal>
           </motion.div>
         </motion.div>

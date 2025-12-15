@@ -1,6 +1,6 @@
 # Curhatin AI
 
-> Indonesian AI-powered emotional support platform - Landing Page
+> Indonesian AI-powered emotional support platform
 
 **Course Project** for PPD (Pengelolaan Produk Digital) at Fasilkom UI
 
@@ -10,16 +10,21 @@
 
 Curhatin AI is a concept for an Indonesian emotional support platform where users can safely express their feelings and receive empathetic AI-powered responses. "Curhat" in Indonesian means to vent or pour out one's feelings.
 
-**Note:** This repository contains only the **marketing landing page** for the product concept. The actual AI chat functionality is not implemented.
+This repository contains the **marketing landing page** showcasing the product concept, along with a **demo chatbot** for visitors to try the AI experience.
 
-### Features Showcased
+### Product Features (Showcased)
 
-- Hero section with value proposition
-- Feature highlights (Journaling, Mood Tracker, Mindful Moment)
-- "Why Us" benefits section
-- How It Works guide
-- FAQ accordion
-- Wishlist signup modal with Google Sheets integration
+The landing page highlights these planned product features:
+
+- **Journaling** - Write freely to process emotions and track feelings over time
+- **Mood Tracker** - Monitor emotional patterns with easy daily check-ins
+- **Mindful Moment** - Guided breathing and relaxation exercises
+
+### Website Features (Implemented)
+
+- **AI Chatbot Demo** - Try the empathetic AI assistant (Parlant-powered) with bilingual support (Indonesian/English)
+- **Landing Page** - Hero, features showcase, how-it-works guide, FAQ sections
+- **Wishlist Signup** - Join the waitlist with Google Sheets + Cloudflare Turnstile
 
 ## Tech Stack
 
@@ -29,8 +34,9 @@ Curhatin AI is a concept for an Indonesian emotional support platform where user
 | React | 19 | UI library with new compiler |
 | Tailwind CSS | 4 | Utility-first styling with `@theme` |
 | Motion | 12 | Animation library |
+| react-chatbotify | 2.3 | Chat UI components |
+| parlant-client | 3.0 | AI backend SDK |
 | Radix UI | - | Accessible primitives |
-| animate-ui | - | Pre-built animated components |
 | Ultracite | 6 | Biome-based linting & formatting |
 
 ## Getting Started
@@ -39,6 +45,7 @@ Curhatin AI is a concept for an Indonesian emotional support platform where user
 
 - Node.js 18+
 - [Bun](https://bun.sh/) (recommended) or npm/yarn/pnpm
+- Parlant server (for AI chatbot functionality)
 
 ### Installation
 
@@ -57,13 +64,41 @@ cp .env.example .env.local
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the landing page.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
 ### Environment Setup
 
-The wishlist form requires Google Sheets and Cloudflare Turnstile to work. Follow the steps below to set them up.
+#### 1. Parlant (AI Chatbot Backend)
 
-#### 1. Google Sheets (Wishlist Storage)
+The chatbot requires a running Parlant server with configured agents.
+
+1. Set up your Parlant server (see [Parlant documentation](https://github.com/parlant-ai/parlant))
+2. Create two agents in Parlant:
+   - One for Indonesian responses
+   - One for English responses
+3. Copy the agent IDs and server URL to `.env.local`
+
+```bash
+PARLANT_SERVER_URL=http://your-parlant-server:8800
+PARLANT_AGENT_ID_ID=your_indonesian_agent_id
+PARLANT_AGENT_ID_EN=your_english_agent_id
+```
+
+#### 2. Cloudflare Turnstile (Bot Protection)
+
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/) > **Turnstile**
+2. Click **Add Site**
+3. Enter your domain name (use `localhost` for development)
+4. Select Widget Type: **Managed** (recommended)
+5. Click **Create**
+6. Copy the keys to `.env.local`:
+
+```bash
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=0x4AAAAAAA...
+TURNSTILE_SECRET_KEY=0x4AAAAAAA...
+```
+
+#### 3. Google Sheets (Wishlist Storage)
 
 1. Create a new Google Sheet at [sheets.new](https://sheets.new)
 2. Name it "Curhatin Wishlist" (or any name you prefer)
@@ -101,23 +136,22 @@ function doPost(e) {
 10. Click **Deploy** and copy the Web app URL
 11. Paste the URL in `.env.local` as `NEXT_PUBLIC_GOOGLE_SCRIPT_URL`
 
-#### 2. Cloudflare Turnstile (Spam Protection)
-
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/) > **Turnstile**
-2. Click **Add Site**
-3. Enter your domain name (use `localhost` for development)
-4. Select Widget Type: **Managed** (recommended)
-5. Click **Create**
-6. Copy the **Site Key** and paste in `.env.local` as `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
-7. Copy the **Secret Key** and paste in `.env.local` as `TURNSTILE_SECRET_KEY`
-
 #### Environment Variables Summary
 
 ```bash
 # .env.local
-NEXT_PUBLIC_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
+
+# Parlant Configuration (AI Chatbot)
+PARLANT_SERVER_URL=http://your-parlant-server:8800
+PARLANT_AGENT_ID_ID=your_indonesian_agent_id
+PARLANT_AGENT_ID_EN=your_english_agent_id
+
+# Cloudflare Turnstile
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=0x4AAAAAAA...
 TURNSTILE_SECRET_KEY=0x4AAAAAAA...
+
+# Google Sheets (Wishlist)
+NEXT_PUBLIC_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
 ```
 
 ## Project Structure
@@ -126,13 +160,25 @@ TURNSTILE_SECRET_KEY=0x4AAAAAAA...
 src/
 ├── app/
 │   ├── api/
+│   │   ├── v1/parlant/
+│   │   │   ├── sessions/
+│   │   │   │   ├── route.ts           # Create Parlant sessions
+│   │   │   │   └── [sessionId]/
+│   │   │   │       └── events/
+│   │   │   │           └── route.ts   # Send/poll messages
 │   │   └── wishlist/
-│   │       └── route.ts    # Wishlist API with Turnstile verification
-│   ├── layout.tsx          # Root layout with fonts
-│   ├── page.tsx            # Landing page
-│   └── globals.css         # Tailwind + CSS variables
+│   │       └── route.ts               # Wishlist API
+│   ├── layout.tsx                     # Root layout with chatbot
+│   ├── page.tsx                       # Landing page
+│   └── globals.css                    # Tailwind + CSS variables
 ├── components/
-│   ├── landing/            # Landing page sections
+│   ├── chatbot/
+│   │   ├── curhatin-chat-bot.tsx      # Main chatbot component
+│   │   └── system-prompts/            # AI system prompts
+│   │       ├── index.ts
+│   │       ├── indonesian.ts
+│   │       └── english.ts
+│   ├── landing/                       # Landing page sections
 │   │   ├── header.tsx
 │   │   ├── hero.tsx
 │   │   ├── why-us.tsx
@@ -141,9 +187,12 @@ src/
 │   │   ├── faq.tsx
 │   │   ├── footer.tsx
 │   │   └── wishlist-modal.tsx
-│   └── animate-ui/         # Animated UI components
-├── hooks/                  # Custom React hooks
-└── lib/                    # Utilities
+│   └── animate-ui/                    # Animated UI components
+├── hooks/                             # Custom React hooks
+└── lib/
+    ├── utils.ts                       # cn() function
+    ├── parlant-client.ts              # Parlant SDK wrapper
+    └── get-strict-context.tsx
 ```
 
 ## Development
@@ -169,7 +218,7 @@ bun start
 The design uses a calming teal color scheme to evoke feelings of safety and tranquility:
 
 - **Primary:** `#5DC998` (Teal) - Main brand color
-- **Secondary:** `#F6FCFC` - Light backgrounds
+- **Secondary:** `#D9F1F3`, `#F6FCFC` - Light backgrounds
 - **Accent:** `#FFB6C1` (Pink) - Hearts and love elements
 
 ### Typography
@@ -179,7 +228,7 @@ The design uses a calming teal color scheme to evoke feelings of safety and tran
 
 ### Language
 
-All user-facing content is in **Indonesian (Bahasa Indonesia)**.
+All user-facing content is in **Indonesian (Bahasa Indonesia)** with English support in the chatbot.
 
 ## Course Information
 

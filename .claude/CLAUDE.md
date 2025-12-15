@@ -4,7 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Curhatin AI is an Indonesian emotional support landing page for a university course project (PPD at Fasilkom UI). This repository contains **only the marketing landing page** - no AI chat functionality is implemented. All user-facing content is in **Indonesian (Bahasa Indonesia)**.
+Curhatin AI is an Indonesian emotional support platform concept for a university course project (PPD at Fasilkom UI). This repository contains the **marketing landing page** with a **demo chatbot** for visitors to try.
+
+### Product Features (Showcased on Landing Page)
+- **Journaling** - Write freely to process emotions and track feelings
+- **Mood Tracker** - Monitor emotional patterns with daily check-ins
+- **Mindful Moment** - Guided breathing and relaxation exercises
+
+### Website Features (Implemented)
+- **AI Chatbot Demo** - Try the empathetic AI (Parlant-powered, bilingual ID/EN)
+- **Landing Page** - Hero, features, how-it-works, FAQ sections
+- **Wishlist Signup** - Google Sheets + Cloudflare Turnstile
+
+All user-facing content is in **Indonesian (Bahasa Indonesia)** with English support in the chatbot.
 
 ## Commands
 
@@ -21,19 +33,36 @@ bun check        # Lint and format with Ultracite/Biome
 - **React 19** with the new compiler
 - **Tailwind CSS v4** with `@theme` syntax in globals.css
 - **Motion** (Framer Motion) for animations
+- **react-chatbotify** for chat UI components
+- **parlant-client** for AI backend integration
 - **animate-ui** components via shadcn CLI with custom registry
 
 ## Architecture
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout (fonts, metadata)
-│   ├── page.tsx            # Landing page composition
-│   └── globals.css         # Tailwind + CSS variables
+├── app/
+│   ├── api/
+│   │   ├── v1/parlant/
+│   │   │   ├── sessions/
+│   │   │   │   ├── route.ts           # Create Parlant sessions (POST)
+│   │   │   │   └── [sessionId]/
+│   │   │   │       └── events/
+│   │   │   │           └── route.ts   # Send (POST) / Poll (GET) messages
+│   │   └── wishlist/
+│   │       └── route.ts               # Wishlist API with Turnstile
+│   ├── layout.tsx                     # Root layout with CurhatinChatBot
+│   ├── page.tsx                       # Landing page composition
+│   └── globals.css                    # Tailwind + CSS variables
 ├── components/
-│   ├── landing/            # Landing page sections
-│   │   ├── hero.tsx
+│   ├── chatbot/
+│   │   ├── curhatin-chat-bot.tsx      # Main chatbot component (react-chatbotify)
+│   │   └── system-prompts/
+│   │       ├── index.ts               # Language selection helpers
+│   │       ├── indonesian.ts          # Indonesian system prompt
+│   │       └── english.ts             # English system prompt
+│   ├── landing/                       # Landing page sections
+│   │   ├── hero.tsx                   # Hero with CTA buttons
 │   │   ├── features.tsx
 │   │   ├── why-us.tsx
 │   │   ├── how-it-works.tsx
@@ -41,12 +70,13 @@ src/
 │   │   ├── header.tsx
 │   │   ├── footer.tsx
 │   │   └── wishlist-modal.tsx
-│   └── animate-ui/         # Animated component library
-│       ├── components/     # Ready-to-use components
-│       └── primitives/     # Base primitives
-├── hooks/                  # Custom hooks (use-controlled-state, use-is-in-view)
+│   └── animate-ui/                    # Animated component library
+│       ├── components/                # Ready-to-use components
+│       └── primitives/                # Base primitives
+├── hooks/                             # Custom hooks
 └── lib/
-    ├── utils.ts            # cn() function (clsx + tailwind-merge)
+    ├── utils.ts                       # cn() function (clsx + tailwind-merge)
+    ├── parlant-client.ts              # Parlant SDK wrapper
     └── get-strict-context.tsx
 ```
 
@@ -68,6 +98,19 @@ const containerVariants: Variants = {
 };
 ```
 
+### Chatbot Integration
+The chatbot is rendered globally in `layout.tsx` and can be opened via custom event:
+```typescript
+window.dispatchEvent(new CustomEvent("openCurhatinChatbot"));
+```
+
+### Parlant Session Flow
+1. User selects language (Indonesian/English)
+2. Turnstile verification runs in background
+3. Session created via `POST /api/v1/parlant/sessions`
+4. Messages sent via `POST /api/v1/parlant/sessions/[id]/events`
+5. Responses polled via `GET /api/v1/parlant/sessions/[id]/events`
+
 ### Component Installation
 Use shadcn CLI with custom animate-ui registry:
 ```bash
@@ -83,6 +126,22 @@ npx shadcn@latest add -r @animate-ui <component-name>
 - Background: `#D9F1F3`, `#F6FCFC`
 - Text: `#3E4A4F`
 
+## Environment Variables
+
+```bash
+# Parlant Configuration (AI Chatbot)
+PARLANT_SERVER_URL=http://your-parlant-server:8800
+PARLANT_AGENT_ID_ID=your_indonesian_agent_id
+PARLANT_AGENT_ID_EN=your_english_agent_id
+
+# Cloudflare Turnstile (Bot Protection)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_site_key
+TURNSTILE_SECRET_KEY=your_secret_key
+
+# Google Sheets (Wishlist)
+NEXT_PUBLIC_GOOGLE_SCRIPT_URL=your_apps_script_url
+```
+
 ## Code Standards (Ultracite/Biome)
 
 Run `bun check` before committing. Key rules:
@@ -91,3 +150,4 @@ Run `bun check` before committing. Key rules:
 - Prefer `unknown` over `any`
 - Use Next.js `<Image>` component for images
 - Client components need `"use client"` directive
+- File names should be kebab-case (e.g., `curhatin-chat-bot.tsx`)
